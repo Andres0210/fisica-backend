@@ -5,7 +5,7 @@
   "scripts": {
     "prebuild": "prisma generate --schema prisma/schema.prisma",
     "dev": "nest start --watch",
-    "build": "tsc -p tsconfig.build.json",
+    "build": "tsc -p tsconfig.build.json && tsc -p tsconfig.seed.json",
     "start": "node dist/main.js",
     "start:prod": "node dist/main.js",
     "start:railway": "node dist/main.js",
