@@ -4,6 +4,10 @@
     "sourceMap": false,
     "declaration": false
   },
+  "include": [
+    "src/**/*.ts",
+    "prisma/**/*.ts"
+  ],
   "exclude": [
     "node_modules",
     "dist"

@@ -5,6 +5,9 @@
 		},
 		{
 			"path": "../../fisica-campus"
+		},
+		{
+			"path": "../../aws-deploy"
 		}
 	],
 	"settings": {}
