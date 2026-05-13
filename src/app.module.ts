@@ -8,6 +8,7 @@ import { ResourcesModule } from "./resources/resources.module";
 import { SimulationsModule } from "./simulations/simulations.module";
 import { StorageModule } from "./storage/storage.module";
 import { TopicsModule } from "./topics/topics.module";
+import { UsersModule } from "./users/users.module";
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import { TopicsModule } from "./topics/topics.module";
     TopicsModule,
     ResourcesModule,
     SimulationsModule,
+    UsersModule,
   ],
   controllers: [HealthController],
 })
