@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from "@nestjs/common";
+import { Injectable, InternalServerErrorException, NotFoundException } from "@nestjs/common";
 import { ResourceCategory, ResourceStatus, ResourceType, UserRole } from "@prisma/client";
 import { slugify } from "../common/slug.util";
 import { PrismaService } from "../prisma/prisma.service";
@@ -225,8 +225,14 @@ export class ResourcesService {
       return authorId;
     }
 
-    const teacherEmail = process.env.TEACHER_EMAIL ?? "laura.mendoza@universidad.edu";
-    const teacherName = process.env.TEACHER_NAME ?? "Dra. Laura Mendoza";
+    const teacherEmail = process.env.TEACHER_EMAIL;
+    const teacherName = process.env.TEACHER_NAME;
+
+    if (!teacherEmail || !teacherName) {
+      throw new InternalServerErrorException(
+        "TEACHER_EMAIL y TEACHER_NAME son obligatorios para crear recursos.",
+      );
+    }
 
     const teacher = await this.prisma.user.upsert({
       where: { email: teacherEmail },

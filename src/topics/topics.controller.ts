@@ -1,4 +1,5 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, Query } from "@nestjs/common";
+import { Body, Controller, Delete, Get, Param, Patch, Post, Query, UseGuards } from "@nestjs/common";
+import { AdminApiGuard } from "../auth/admin-api.guard";
 import { CreateTopicDto } from "./dto/create-topic.dto";
 import { FindTopicsQueryDto } from "./dto/find-topics-query.dto";
 import { UpdateTopicDto } from "./dto/update-topic.dto";
@@ -19,16 +20,19 @@ export class TopicsController {
   }
 
   @Post()
+  @UseGuards(AdminApiGuard)
   create(@Body() dto: CreateTopicDto) {
     return this.topicsService.create(dto);
   }
 
   @Patch(":id")
+  @UseGuards(AdminApiGuard)
   update(@Param("id") id: string, @Body() dto: UpdateTopicDto) {
     return this.topicsService.update(id, dto);
   }
 
   @Delete(":id")
+  @UseGuards(AdminApiGuard)
   remove(@Param("id") id: string) {
     return this.topicsService.remove(id);
   }

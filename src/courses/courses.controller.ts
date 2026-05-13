@@ -1,4 +1,5 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post } from "@nestjs/common";
+import { Body, Controller, Delete, Get, Param, Patch, Post, UseGuards } from "@nestjs/common";
+import { AdminApiGuard } from "../auth/admin-api.guard";
 import { CreateCourseDto } from "./dto/create-course.dto";
 import { UpdateCourseDto } from "./dto/update-course.dto";
 import { CoursesService } from "./courses.service";
@@ -18,16 +19,19 @@ export class CoursesController {
   }
 
   @Post()
+  @UseGuards(AdminApiGuard)
   create(@Body() dto: CreateCourseDto) {
     return this.coursesService.create(dto);
   }
 
   @Patch(":id")
+  @UseGuards(AdminApiGuard)
   update(@Param("id") id: string, @Body() dto: UpdateCourseDto) {
     return this.coursesService.update(id, dto);
   }
 
   @Delete(":id")
+  @UseGuards(AdminApiGuard)
   remove(@Param("id") id: string) {
     return this.coursesService.remove(id);
   }

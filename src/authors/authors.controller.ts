@@ -1,4 +1,5 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, Query } from "@nestjs/common";
+import { Body, Controller, Delete, Get, Param, Patch, Post, Query, UseGuards } from "@nestjs/common";
+import { AdminApiGuard } from "../auth/admin-api.guard";
 import { AuthorsService } from "./authors.service";
 import { CreateAuthorDto } from "./dto/create-author.dto";
 import { FindAuthorsQueryDto } from "./dto/find-authors-query.dto";
@@ -19,16 +20,19 @@ export class AuthorsController {
   }
 
   @Post()
+  @UseGuards(AdminApiGuard)
   create(@Body() dto: CreateAuthorDto) {
     return this.authorsService.create(dto);
   }
 
   @Patch(":id")
+  @UseGuards(AdminApiGuard)
   update(@Param("id") id: string, @Body() dto: UpdateAuthorDto) {
     return this.authorsService.update(id, dto);
   }
 
   @Delete(":id")
+  @UseGuards(AdminApiGuard)
   remove(@Param("id") id: string) {
     return this.authorsService.remove(id);
   }

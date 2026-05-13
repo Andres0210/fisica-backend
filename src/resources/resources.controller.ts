@@ -1,5 +1,6 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, Query, UploadedFile, UseInterceptors } from "@nestjs/common";
+import { Body, Controller, Delete, Get, Param, Patch, Post, Query, UploadedFile, UseGuards, UseInterceptors } from "@nestjs/common";
 import { FileInterceptor } from "@nestjs/platform-express";
+import { AdminApiGuard } from "../auth/admin-api.guard";
 import { CreateResourceDto } from "./dto/create-resource.dto";
 import { FindResourcesQueryDto } from "./dto/find-resources-query.dto";
 import { UploadResourceAssetDto } from "./dto/upload-resource-asset.dto";
@@ -16,6 +17,7 @@ export class ResourcesController {
   }
 
   @Post("upload")
+  @UseGuards(AdminApiGuard)
   @UseInterceptors(
     FileInterceptor("file", {
       limits: {
@@ -41,16 +43,19 @@ export class ResourcesController {
   }
 
   @Post()
+  @UseGuards(AdminApiGuard)
   create(@Body() dto: CreateResourceDto) {
     return this.resourcesService.create(dto);
   }
 
   @Patch(":id")
+  @UseGuards(AdminApiGuard)
   update(@Param("id") id: string, @Body() dto: UpdateResourceDto) {
     return this.resourcesService.update(id, dto);
   }
 
   @Delete(":id")
+  @UseGuards(AdminApiGuard)
   remove(@Param("id") id: string) {
     return this.resourcesService.remove(id);
   }
