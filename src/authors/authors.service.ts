@@ -1,13 +1,17 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
-import { PrismaService } from "../prisma/prisma.service";
 import { slugify } from "../common/slug.util";
+import { PrismaService } from "../prisma/prisma.service";
+import { StorageService } from "../storage/storage.service";
 import { CreateAuthorDto } from "./dto/create-author.dto";
 import { FindAuthorsQueryDto } from "./dto/find-authors-query.dto";
 import { UpdateAuthorDto } from "./dto/update-author.dto";
 
 @Injectable()
 export class AuthorsService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly storageService: StorageService,
+  ) {}
 
   async findAll(query: FindAuthorsQueryDto) {
     return this.prisma.author.findMany({
@@ -83,6 +87,19 @@ export class AuthorsService {
 
     return this.prisma.author.delete({
       where: { id },
+    });
+  }
+
+  async uploadAvatar(file: any) {
+    if (!file) {
+      throw new NotFoundException("No se recibio ninguna imagen para subir.");
+    }
+
+    return this.storageService.uploadAuthorAvatar({
+      buffer: file.buffer,
+      originalName: file.originalname,
+      mimeType: file.mimetype,
+      folder: "authors",
     });
   }
 }

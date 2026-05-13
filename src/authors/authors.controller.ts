@@ -1,4 +1,5 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, Query, UseGuards } from "@nestjs/common";
+import { Body, Controller, Delete, Get, Param, Patch, Post, Query, UploadedFile, UseGuards, UseInterceptors } from "@nestjs/common";
+import { FileInterceptor } from "@nestjs/platform-express";
 import { AdminApiGuard } from "../auth/admin-api.guard";
 import { AuthorsService } from "./authors.service";
 import { CreateAuthorDto } from "./dto/create-author.dto";
@@ -23,6 +24,19 @@ export class AuthorsController {
   @UseGuards(AdminApiGuard)
   create(@Body() dto: CreateAuthorDto) {
     return this.authorsService.create(dto);
+  }
+
+  @Post("upload-avatar")
+  @UseGuards(AdminApiGuard)
+  @UseInterceptors(
+    FileInterceptor("file", {
+      limits: {
+        fileSize: 8 * 1024 * 1024,
+      },
+    }),
+  )
+  uploadAvatar(@UploadedFile() file: any) {
+    return this.authorsService.uploadAvatar(file);
   }
 
   @Patch(":id")

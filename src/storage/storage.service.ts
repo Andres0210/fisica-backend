@@ -21,6 +21,8 @@ type UploadedAsset = {
   fileSizeMb: number;
 };
 
+const IMAGE_MIME_TYPES = new Set(["image/jpeg", "image/png", "image/webp", "image/gif"]);
+
 @Injectable()
 export class StorageService {
   private client: SupabaseClient | null = null;
@@ -92,6 +94,21 @@ export class StorageService {
       sizeInBytes: input.buffer.byteLength,
       fileSizeMb: Number((input.buffer.byteLength / 1024 / 1024).toFixed(2)),
     };
+  }
+
+  async uploadAuthorAvatar(input: UploadFileInput): Promise<UploadedAsset> {
+    if (!input.buffer?.length) {
+      throw new BadRequestException("No se recibio una imagen valida.");
+    }
+
+    if (!IMAGE_MIME_TYPES.has(input.mimeType)) {
+      throw new BadRequestException("Solo se permiten imagenes JPG, PNG, WEBP o GIF para autores.");
+    }
+
+    return this.uploadResourceAsset({
+      ...input,
+      folder: input.folder?.trim() || "authors",
+    });
   }
 
   async removeResourceAsset(bucket: string | null | undefined, path: string | null | undefined) {
