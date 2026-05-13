@@ -1,5 +1,7 @@
 import { BadRequestException, Injectable, InternalServerErrorException } from "@nestjs/common";
+import type { WebSocketLikeConstructor } from "@supabase/realtime-js";
 import { createClient, SupabaseClient } from "@supabase/supabase-js";
+import WebSocket = require("ws");
 import { slugify } from "../common/slug.util";
 
 type UploadFileInput = {
@@ -46,6 +48,9 @@ export class StorageService {
       auth: {
         persistSession: false,
         autoRefreshToken: false,
+      },
+      realtime: {
+        transport: WebSocket as unknown as WebSocketLikeConstructor,
       },
     });
 
